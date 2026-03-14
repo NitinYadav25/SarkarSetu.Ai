@@ -1,50 +1,52 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import { ArrowRight, Search, CheckCircle, Star, Users, FileCheck } from 'lucide-react';
-
-const steps = [
-  {
-    icon: <FileCheck size={28} color="#1a56db" />,
-    title: 'Tell Us About You',
-    desc: 'Fill a simple form with your age, income, state, and category.',
-  },
-  {
-    icon: <Search size={28} color="#1a56db" />,
-    title: 'AI Matches Schemes',
-    desc: 'Our engine scans 100+ schemes and finds the best matches for you.',
-  },
-  {
-    icon: <CheckCircle size={28} color="#1a56db" />,
-    title: 'Apply Instantly',
-    desc: 'Get AI-explained scheme details and apply directly to government portals.',
-  },
-];
-
-const stats = [
-  { icon: <Users size={22} />, value: '10 Cr+', label: 'Beneficiaries Covered' },
-  { icon: <Star size={22} />, value: '100+', label: 'Government Schemes' },
-  { icon: <CheckCircle size={22} />, value: '98%', label: 'Matching Accuracy' },
-];
 
 const LandingPage = () => {
   const navigate = useNavigate();
   const { isUserAuthenticated } = useAuth();
+  const { t } = useLanguage();
   const [currentImage, setCurrentImage] = useState(0);
 
   const bgImages = [
-    'https://images.unsplash.com/photo-1587474260584-136574528ed5?q=80&w=2070&auto=format&fit=crop', // Delhi India Gate
-    'https://images.unsplash.com/photo-1595981267035-7b04d84caa4b?q=80&w=2070&auto=format&fit=crop', // Indian Rural Women / Empowerment
-    'https://images.unsplash.com/photo-1532375810709-75b1da00537c?q=80&w=2076&auto=format&fit=crop', // Indian Parliament / Government
-    'https://images.unsplash.com/photo-1596422846543-7ecf77861bc9?q=80&w=2070&auto=format&fit=crop', // Education / Students in India
-    'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2070&auto=format&fit=crop', // Technology / Digital India
-    'https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=2070&auto=format&fit=crop'  // Healthcare / Ayushman Bharat
+    'https://images.unsplash.com/photo-1587474260584-136574528ed5?q=80&w=2070&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1595981267035-7b04d84caa4b?q=80&w=2070&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1532375810709-75b1da00537c?q=80&w=2076&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1596422846543-7ecf77861bc9?q=80&w=2070&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2070&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=2070&auto=format&fit=crop',
+  ];
+
+  const steps = [
+    {
+      icon: <FileCheck size={28} color="#1a56db" />,
+      title: t.step1Title,
+      desc: t.step1Desc,
+    },
+    {
+      icon: <Search size={28} color="#1a56db" />,
+      title: t.step2Title,
+      desc: t.step2Desc,
+    },
+    {
+      icon: <CheckCircle size={28} color="#1a56db" />,
+      title: t.step3Title,
+      desc: t.step3Desc,
+    },
+  ];
+
+  const stats = [
+    { icon: <Users size={22} />, value: '10 Cr+', label: t.beneficiaries },
+    { icon: <Star size={22} />, value: '100+', label: t.schemes },
+    { icon: <CheckCircle size={22} />, value: '98%', label: t.accuracy },
   ];
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % bgImages.length);
-    }, 5000); // Change image every 5 seconds
+    }, 5000);
     return () => clearInterval(interval);
   }, []);
 
@@ -65,15 +67,11 @@ const LandingPage = () => {
           ))}
         </div>
 
-        {/* Background decorations (optional, kept for effect over slider) */}
+        {/* Background decorations */}
         <div style={{ position: 'absolute', top: '-80px', right: '-80px', width: '400px', height: '400px', background: 'rgba(255,255,255,0.04)', borderRadius: '50%', zIndex: 1 }} />
         <div style={{ position: 'absolute', bottom: '-60px', left: '-60px', width: '300px', height: '300px', background: 'rgba(255,255,255,0.03)', borderRadius: '50%', zIndex: 1 }} />
 
         <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 2 }}>
-          {/* Badge */}
-          <div className="fade-in-up" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '50px', padding: '6px 18px', marginBottom: '1.5rem', color: '#bfdbfe', fontSize: '0.85rem', fontWeight: 500 }}>
-            <span style={{ fontSize: '1rem' }}>🤖</span> Powered by AI | Government of India Schemes
-          </div>
 
           <h1 className="fade-in-up" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 900, color: 'white', lineHeight: 1.15, marginBottom: '1.25rem', animationDelay: '0.1s' }}>
             Apka Hak,{' '}
@@ -83,15 +81,15 @@ const LandingPage = () => {
           </h1>
 
           <p className="fade-in-up" style={{ fontSize: '1.15rem', color: 'rgba(255,255,255,0.8)', lineHeight: 1.7, maxWidth: '620px', margin: '0 auto 2.5rem', animationDelay: '0.2s' }}>
-            Government scheme mili ya nahi? <strong style={{ color: 'white' }}>SarkarSetu AI</strong> aapke profile ke basis par best matching schemes dhundh kar, simple bhasha mein samjhata hai.
+            {t.heroParagraph}
           </p>
 
           <div className="fade-in-up responsive-flex" style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center', animationDelay: '0.3s' }}>
             <button className="btn-primary pulse-ring" style={{ fontSize: '1.05rem', padding: '0.9rem 2.25rem' }} onClick={() => navigate(isUserAuthenticated ? '/recommendations' : '/signup')}>
-              {isUserAuthenticated ? 'View My Schemes' : 'Setup Profile & Check Eligibility'} <ArrowRight size={18} />
+              {isUserAuthenticated ? t.viewMySchemes : t.checkEligibility} <ArrowRight size={18} />
             </button>
             <a href="https://india.gov.in" target="_blank" rel="noopener noreferrer" className="btn-secondary" style={{ background: 'rgba(255,255,255,0.1)', borderColor: 'rgba(255,255,255,0.3)', color: 'white' }}>
-              Browse All Schemes
+              {t.browseAllSchemes}
             </a>
           </div>
 
@@ -119,8 +117,8 @@ const LandingPage = () => {
 
       {/* ── 3-Step Section ────────────────────────────────────── */}
       <section style={{ padding: '3rem 1.5rem 4rem', maxWidth: '1100px', margin: '0 auto' }}>
-        <h2 className="section-heading">Kaise Kaam Karta Hai?</h2>
-        <p className="section-sub">Sirf 3 steps mein janiye aap kaun si scheme ke liye eligible hain</p>
+        <h2 className="section-heading">{t.howItWorks}</h2>
+        <p className="section-sub">{t.howItWorksSub}</p>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
           {steps.map((step, i) => (
@@ -157,13 +155,13 @@ const LandingPage = () => {
           textAlign: 'center', boxShadow: '0 8px 40px rgba(26,86,219,0.3)',
         }}>
           <h2 style={{ color: 'white', fontSize: '1.75rem', fontWeight: 800, marginBottom: '0.75rem' }}>
-            Aaj Hi Check Karein Apni Eligibility! 🚀
+            {t.ctaHeading}
           </h2>
           <p style={{ color: 'rgba(255,255,255,0.75)', marginBottom: '1.75rem' }}>
-            Free • No Registration • Instant AI Results
+            {t.ctaSub}
           </p>
           <button className="btn-primary mobile-full-width" style={{ background: '#fbbf24', color: '#0f2460', boxShadow: '0 4px 20px rgba(251,191,36,0.4)', fontSize: '1rem', padding: '0.9rem 2.5rem' }} onClick={() => navigate(isUserAuthenticated ? '/recommendations' : '/signup')}>
-            {isUserAuthenticated ? 'Go to Dashboard' : "Start Now — It's Free!"} <ArrowRight size={18} />
+            {isUserAuthenticated ? t.goToDashboard : t.startNow} <ArrowRight size={18} />
           </button>
         </div>
       </section>
@@ -171,10 +169,10 @@ const LandingPage = () => {
       {/* ── Footer ────────────────────────────────────────────── */}
       <footer style={{ background: '#0f2460', color: 'rgba(255,255,255,0.6)', textAlign: 'center', padding: '1.5rem', fontSize: '0.85rem' }}>
         <div style={{ marginBottom: '0.5rem' }}>
-          🇮🇳 SarkarSetu AI — Har Citizen Ka Adhikar | Built for Hackathon 2026
+          {t.footerText}
         </div>
         <div>
-          <Link to="/admin/login" style={{ color: 'rgba(255,255,255,0.4)', textDecoration: 'none', fontSize: '0.75rem' }}>Admin Access</Link>
+          <Link to="/admin/login" style={{ color: 'rgba(255,255,255,0.4)', textDecoration: 'none', fontSize: '0.75rem' }}>{t.adminAccess}</Link>
         </div>
       </footer>
     </div>
