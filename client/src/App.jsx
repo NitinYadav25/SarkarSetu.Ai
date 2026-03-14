@@ -13,6 +13,7 @@ import SchemeDetail from './pages/SchemeDetail';
 import AdminLogin from './pages/AdminLogin';
 import AdminPanel from './pages/AdminPanel';
 import ProtectedUserRoute from './components/ProtectedUserRoute';
+import ChatbotWidget from './components/ChatbotWidget';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
       <AuthProvider>
         <Router>
           <Navbar />
+
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/signup" element={<UserSignup />} />
@@ -52,6 +54,7 @@ function App() {
             } />
           </Routes>
           <Toaster position="top-right" toastOptions={{ style: { fontFamily: 'Inter, sans-serif', borderRadius: '10px', boxShadow: '0 4px 20px rgba(0,0,0,0.12)' }, success: { iconTheme: { primary: '#10b981', secondary: 'white' } }, error: { iconTheme: { primary: '#ef4444', secondary: 'white' } } }} />
+          <ChatbotWidget />
         </Router>
       </AuthProvider>
     </LanguageProvider>

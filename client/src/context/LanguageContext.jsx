@@ -2,7 +2,7 @@ import { createContext, useContext, useState } from 'react';
 
 const LanguageContext = createContext();
 
-export const translations = {
+const translations = {
   en: {
     // Navbar
     home: 'Home',
@@ -44,6 +44,13 @@ export const translations = {
     // Footer
     footerText: "SarkarSetu AI — Every Citizen's Right",
     adminAccess: 'Admin Access',
+
+    // Chatbot
+    botGreeting: 'Hello! 🙏 I am SarkarSetu AI. You can ask me about any government scheme.',
+    botPlaceholder: 'Ask anything about schemes...',
+    botError: 'Sorry, the service is currently unavailable. Please try again later.',
+    botTitle: 'SarkarSetu AI',
+    botSubtitle: 'Scheme Assistant • Online',
   },
   hi: {
     // Navbar
@@ -86,6 +93,13 @@ export const translations = {
     // Footer
     footerText: 'SarkarSetu AI — हर नागरिक का अधिकार',
     adminAccess: 'एडमिन एक्सेस',
+
+    // Chatbot
+    botGreeting: 'नमस्ते! 🙏 मैं SarkarSetu AI हूँ। आप किसी भी सरकारी योजना के बारे में पूछ सकते हैं।',
+    botPlaceholder: 'किसी भी योजना के बारे में पूछें...',
+    botError: 'माफ़ कीजिए, अभी सर्विस उपलब्ध नहीं है। थोड़ी देर बाद प्रयास करें।',
+    botTitle: 'SarkarSetu AI',
+    botSubtitle: 'योजना सहायक • ऑनलाइन',
   },
 };
 

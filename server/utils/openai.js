@@ -42,7 +42,7 @@ Write a helpful, encouraging summary.`;
     return completion.choices[0].message.content.trim();
   } catch (error) {
     console.error('OpenAI summary error:', error.message);
-    return `${scheme.name} - Aap is scheme ke liye eligible hain. Is scheme se aapko ${scheme.benefits[0] || 'financial help'} milega.`;
+    return `${scheme.name} - You are eligible for this scheme. It will provide you with ${scheme.benefits[0] || 'financial support'}.`;
   }
 };
 
@@ -61,7 +61,7 @@ const chatbotAnswer = async (userProfile, availableSchemes, userQuestion) => {
 
 STRICT RULE: You must ONLY answer from the provided scheme list below.
 Do NOT use external knowledge. If the question is NOT related to these schemes, respond:
-"Is profile ke basis par koi relevant scheme nahi mili. Kripya apna profile check karein."
+"No relevant schemes were found based on this profile. Please update your profile information."
 
 USER PROFILE:
 Age: ${userProfile.age}, Income: ₹${userProfile.income}/year, Occupation: ${userProfile.occupation}, State: ${userProfile.state}, Category: ${userProfile.category}
@@ -71,7 +71,12 @@ ${schemeList || 'No schemes available.'}
 
 USER QUESTION: ${userQuestion}
 
-Answer in simple Hindi-English mix. Be concise and helpful.`;
+CRITICAL LANGUAGE RULE: 
+- Your DEFAULT language must be ENGLISH.
+- If the user asks their question in Hindi (Devanagari or Roman/Hinglish), ONLY THEN you MUST reply ONLY in Hindi.
+- If the user asks in English, you MUST reply ONLY in English.
+- Do NOT mix languages. Match the user's exact preferred language.
+- Be concise, friendly, and helpful.`;
 
   try {
     const completion = await openai.chat.completions.create({
@@ -83,7 +88,7 @@ Answer in simple Hindi-English mix. Be concise and helpful.`;
     return completion.choices[0].message.content.trim();
   } catch (error) {
     console.error('OpenAI chatbot error:', error.message);
-    return 'Maafi kijiye, abhi AI service available nahi hai. Thodi der baad try karein.';
+    return 'Sorry, the AI service is currently unavailable. Please try again later.';
   }
 };
 

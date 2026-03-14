@@ -1,12 +1,21 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { MessageCircle, X, Send, Bot } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import API from '../api/axios';
 
-const ChatbotWidget = ({ userProfile, availableSchemes = [] }) => {
+const ChatbotWidget = () => {
+  const { user } = useAuth();
+  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    { role: 'bot', text: 'Namaste! 🙏 Main SarkarSetu AI hoon. Aap koi bhi government scheme ke baare mein puch sakte hain.' },
-  ]);
+  const [messages, setMessages] = useState([]);
+  
+  // Initialize greeting using the translation dictionary.
+  useEffect(() => {
+    if (messages.length === 0) {
+      setMessages([{ role: 'bot', text: t.botGreeting }]);
+    }
+  }, [t.botGreeting, messages.length]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
@@ -24,17 +33,17 @@ const ChatbotWidget = ({ userProfile, availableSchemes = [] }) => {
     setLoading(true);
     try {
       const res = await API.post('/chatbot', {
-        userProfile: userProfile || { age: 25, income: 100000, state: 'All', category: 'General', occupation: 'other', gender: 'other' },
-        availableSchemes,
+        userProfile: user?.profile || { age: 25, income: 100000, state: 'All', category: 'General', occupation: 'other', gender: 'other' },
+        availableSchemes: [],
         userQuestion: question,
       });
       setMessages(prev => [...prev, { role: 'bot', text: res.data.answer }]);
     } catch {
-      setMessages(prev => [...prev, { role: 'bot', text: 'Maafi kijiye, abhi service available nahi hai. Thodi der baad try karein.' }]);
+      setMessages(prev => [...prev, { role: 'bot', text: t.botError }]);
     } finally {
       setLoading(false);
     }
-  }, [userProfile, availableSchemes, loading]);
+  }, [user, loading]);
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -87,8 +96,8 @@ const ChatbotWidget = ({ userProfile, availableSchemes = [] }) => {
               <Bot size={20} color="white" />
             </div>
             <div>
-              <div style={{ color: 'white', fontWeight: 700, fontSize: '0.9rem' }}>SarkarSetu AI</div>
-              <div style={{ color: '#93c5fd', fontSize: '0.72rem' }}>Scheme Assistant • Online</div>
+              <div style={{ color: 'white', fontWeight: 700, fontSize: '0.9rem' }}>{t.botTitle}</div>
+              <div style={{ color: '#93c5fd', fontSize: '0.72rem' }}>{t.botSubtitle}</div>
             </div>
           </div>
 
@@ -123,7 +132,7 @@ const ChatbotWidget = ({ userProfile, availableSchemes = [] }) => {
           <div style={{ padding: '0.75rem', borderTop: '1px solid #e2e8f0', display: 'flex', gap: '0.5rem' }}>
             <input
               className="form-input"
-              placeholder="Koi bhi scheme ke baare mein puchein..."
+              placeholder={t.botPlaceholder}
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
