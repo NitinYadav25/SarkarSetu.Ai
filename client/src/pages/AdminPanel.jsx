@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Plus, Pencil, Trash2, X, Check, Shield, LogOut } from 'lucide-react';
+import { Plus, Pencil, Trash2, X, Check, Shield, LogOut, DownloadCloud } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import API from '../api/axios';
@@ -21,6 +21,7 @@ const AdminPanel = () => {
   const [form, setForm] = useState(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const [scrapingType, setScrapingType] = useState(null);
 
   const fetchSchemes = async () => {
     setLoading(true);
@@ -83,6 +84,19 @@ const AdminPanel = () => {
     } catch { toast.error('Delete failed.'); }
   };
 
+  const handleScrape = async (type) => {
+    setScrapingType(type);
+    try {
+      const res = await API.post('/schemes/scrape', { type });
+      toast.success(res.data.message || `Successfully scraped ${type}`);
+      fetchSchemes(); // Refresh table to show new data
+    } catch (err) {
+      toast.error(err.response?.data?.message || err.response?.data?.error || `Failed to scrape ${type}`);
+    } finally {
+      setScrapingType(null);
+    }
+  };
+
   return (
     <div style={{ minHeight: 'calc(100vh - 64px)', padding: '2rem 1.5rem', maxWidth: '1200px', margin: '0 auto' }}>
       {/* Header */}
@@ -100,6 +114,35 @@ const AdminPanel = () => {
           <button className="btn-secondary" onClick={() => { logout(); navigate('/'); }} style={{ fontSize: '0.9rem', padding: '0.65rem 1.25rem' }}>
             <LogOut size={15} /> Logout
           </button>
+        </div>
+      </div>
+
+      {/* Web Scraper Engine (Admin Action) */}
+      <div className="glass-card fade-in-up" style={{ padding: '1.5rem', marginBottom: '1.75rem', background: 'linear-gradient(to right, #f8fafc, #fff)' }}>
+        <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f2460', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '1rem' }}>
+          <DownloadCloud size={20} color="#1a56db" /> Web Scraper Engine (Live Sync)
+        </h3>
+        <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
+          Background cron jobs run at 6h (Jobs), 1 Day (Schemes), and 3 Days (Notices). Use these buttons to forcefully fetch the latest external data instantly.
+        </p>
+        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+          {['Jobs', 'Schemes', 'Notices'].map(type => (
+            <button
+              key={type}
+              onClick={() => handleScrape(type)}
+              disabled={!!scrapingType}
+              style={{
+                background: scrapingType === type ? '#e2e8f0' : '#1a56db',
+                color: scrapingType === type ? '#64748b' : 'white',
+                border: 'none', borderRadius: '8px', padding: '0.6rem 1.25rem',
+                fontSize: '0.85rem', fontWeight: 600, cursor: scrapingType ? 'not-allowed' : 'pointer',
+                display: 'flex', alignItems: 'center', gap: '6px', transition: 'all 0.2s',
+              }}
+            >
+              {scrapingType === type ? <span className="spinner" style={{ width: 14, height: 14, borderWidth: 2 }} /> : <DownloadCloud size={16} />} 
+              {scrapingType === type ? `Scraping ${type}...` : `Fetch ${type}`}
+            </button>
+          ))}
         </div>
       </div>
 

@@ -11,6 +11,10 @@ dotenv.config();
 
 connectDB();
 
+// Initialize Scraping Cron Jobs
+const initCronJobs = require('./cron/cronJobs');
+initCronJobs();
+
 const app = express();
 
 // ─── Security Middleware ─────────────────────────────────────────────────────

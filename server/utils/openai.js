@@ -60,7 +60,9 @@ const chatbotAnswer = async (userProfile, availableSchemes, userQuestion) => {
   const prompt = `You are SarkarSetu AI, a helpful government scheme assistant.
 
 STRICT RULE: You must ONLY answer from the provided scheme list below.
-Do NOT use external knowledge. If the question is NOT related to these schemes, respond:
+Do NOT use external knowledge. 
+FUZZY MATCHING RULE: If the user misspells a scheme name, but it sounds similar or matches at least 30% of an actual scheme name, treat it as a valid match and provide the relevant scheme info.
+If the question is completely unrelated to government schemes or the provided list, respond:
 "No relevant schemes were found based on this profile. Please update your profile information."
 
 USER PROFILE:

@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
-import { Shield, Home, LogOut, User } from 'lucide-react';
+import { Shield, Home, LogOut, User, Landmark } from 'lucide-react';
 
 const Navbar = () => {
   const { isAuthenticated, logout, admin, isUserAuthenticated, userLogout, user } = useAuth();
@@ -29,11 +29,14 @@ const Navbar = () => {
         {/* Logo */}
         <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div style={{
-            width: 36, height: 36, borderRadius: '50%',
-            background: 'rgba(255,255,255,0.2)',
+            width: 40, height: 40, borderRadius: '50%',
+            background: 'linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05))',
+            border: '1px solid rgba(255,255,255,0.3)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: '1.2rem',
-          }}>🇮🇳</div>
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+          }}>
+            <Landmark size={22} color="#fbbf24" strokeWidth={2.5} />
+          </div>
           <div>
             <span style={{ color: 'white', fontWeight: 800, fontSize: '1.15rem', letterSpacing: '-0.5px' }}>
               SarkarSetu

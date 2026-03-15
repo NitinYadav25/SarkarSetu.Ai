@@ -1,4 +1,5 @@
 const Scheme = require('../models/Scheme');
+const { scrapeJobs, scrapeSchemes, scrapeNotices } = require('../services/scraperService');
 
 // @route   GET /api/schemes
 // @access  Public
@@ -78,4 +79,29 @@ const getAllSchemesAdmin = async (req, res, next) => {
   }
 };
 
-module.exports = { getAllSchemes, getSchemeById, createScheme, updateScheme, deleteScheme, getAllSchemesAdmin };
+// @route   POST /api/schemes/scrape
+// @access  Private (Admin)
+const triggerScrape = async (req, res, next) => {
+  try {
+    const { type } = req.body; // 'Jobs', 'Schemes', or 'Notices'
+    let result = { success: false, message: 'Invalid scrape type' };
+
+    if (type === 'Jobs') {
+      result = await scrapeJobs();
+    } else if (type === 'Schemes') {
+      result = await scrapeSchemes();
+    } else if (type === 'Notices') {
+      result = await scrapeNotices();
+    }
+
+    if (result.success) {
+      res.json({ success: true, message: `Successfully scraped ${type}.` });
+    } else {
+      res.status(500).json({ success: false, message: `Failed to scrape ${type}.`, error: result.error });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { getAllSchemes, getSchemeById, createScheme, updateScheme, deleteScheme, getAllSchemesAdmin, triggerScrape };
