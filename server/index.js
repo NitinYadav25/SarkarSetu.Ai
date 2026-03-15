@@ -52,6 +52,15 @@ app.use("/api/schemes", require("./routes/schemeRoutes"));
 app.use("/api/check-eligibility", require("./routes/eligibilityRoutes"));
 app.use("/api/chatbot", require("./routes/chatbotRoutes"));
 
+// ─── Welcome/Root Route (to verify API is alive) ───────────────────────────
+app.get("/", (req, res) => {
+  res.json({
+    message: "Welcome to SarkarSetu AI API",
+    status: "online",
+    documentation: "Refer to the deployment guide for API usage."
+  });
+});
+
 // ─── Health Check ─────────────────────────────────────────────────────────────
 app.get("/health", (req, res) => {
   res.json({
@@ -61,9 +70,22 @@ app.get("/health", (req, res) => {
   });
 });
 
+// ─── Path Logger for Debugging (Vercel only) ──────────────────────────────────
+if (process.env.NODE_ENV === "production") {
+  app.use((req, res, next) => {
+    console.log(`[DEBUG] Incoming Request: ${req.method} ${req.path}`);
+    next();
+  });
+}
+
 // ─── 404 Handler ─────────────────────────────────────────────────────────────
 app.use((req, res) => {
-  res.status(404).json({ success: false, message: "Route not found." });
+  console.log(`[404] Resource not found: ${req.method} ${req.url}`);
+  res.status(404).json({ 
+    success: false, 
+    message: `Route ${req.method} ${req.url} not found on this server.`,
+    tip: "Ensure you are using the correct base URL and path."
+  });
 });
 
 // ─── Global Error Handler ─────────────────────────────────────────────────────

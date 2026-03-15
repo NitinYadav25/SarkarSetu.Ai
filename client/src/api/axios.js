@@ -5,6 +5,10 @@ const API = axios.create({
   timeout: 30000,
 });
 
+if (import.meta.env.PROD && !import.meta.env.VITE_API_URL) {
+  console.warn("⚠️ VITE_API_URL is missing! Requests will likely fail across domains.");
+}
+
 // Attach JWT token for admin requests
 API.interceptors.request.use((config) => {
   const token = localStorage.getItem('sarkarsetuAdminToken');
