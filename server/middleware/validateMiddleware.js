@@ -53,6 +53,8 @@ const schemeSchema = Joi.object({
   documents: Joi.array().items(Joi.string()).min(1).required(),
   applyLink: Joi.string().uri().optional().allow(''),
   isActive: Joi.boolean().optional(),
+  applicationStart: Joi.date().iso().optional().allow(null),
+  applicationEnd: Joi.date().iso().optional().allow(null),
 });
 
 module.exports = { validate, eligibilitySchema, chatbotSchema, loginSchema, schemeSchema };

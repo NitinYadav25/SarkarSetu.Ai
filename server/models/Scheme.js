@@ -32,6 +32,8 @@ const schemeSchema = new mongoose.Schema(
     documents: [{ type: String }],
     applyLink: { type: String },
     isActive: { type: Boolean, default: true },
+    applicationStart: { type: Date },
+    applicationEnd: { type: Date },
   },
   { timestamps: true }
 );

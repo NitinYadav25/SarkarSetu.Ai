@@ -10,6 +10,21 @@ const SchemeCard = ({ scheme, matchPercent, aiSummary, index = 0 }) => {
     return '#ef4444';
   };
 
+  const getDeadlineStatus = (endDate) => {
+    if (!endDate) return null;
+    const now = new Date();
+    const end = new Date(endDate);
+    const diffTime = end - now;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays < 0) return { label: 'Expired', color: '#ef4444' };
+    if (diffDays === 0) return { label: 'Ends Today', color: '#f59e0b' };
+    if (diffDays <= 7) return { label: `Ends in ${diffDays}d`, color: '#f59e0b' };
+    return { label: `${end.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}`, color: '#10b981' };
+  };
+
+  const deadline = getDeadlineStatus(scheme.applicationEnd);
+
   return (
     <div
       className="glass-card fade-in-up"
@@ -24,13 +39,25 @@ const SchemeCard = ({ scheme, matchPercent, aiSummary, index = 0 }) => {
       {/* Header row */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.5rem' }}>
         <div>
-          <span style={{
-            fontSize: '0.7rem', fontWeight: 600, letterSpacing: '1px',
-            color: '#1a56db', textTransform: 'uppercase', background: 'var(--primary-light)',
-            padding: '2px 8px', borderRadius: '4px',
-          }}>
-            {scheme.category}
-          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{
+              fontSize: '0.7rem', fontWeight: 600, letterSpacing: '1px',
+              color: '#1a56db', textTransform: 'uppercase', background: 'var(--primary-light)',
+              padding: '2px 8px', borderRadius: '4px',
+            }}>
+              {scheme.category}
+            </span>
+            {deadline && (
+              <span style={{
+                fontSize: '0.65rem', fontWeight: 700,
+                color: 'white', background: deadline.color,
+                padding: '2px 8px', borderRadius: '4px',
+                display: 'flex', alignItems: 'center', gap: '4px',
+              }}>
+                {deadline.label}
+              </span>
+            )}
+          </div>
           <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginTop: '0.4rem', color: 'var(--text-primary)', lineHeight: 1.25 }}>
             {scheme.name}
           </h3>

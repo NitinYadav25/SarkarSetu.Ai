@@ -9,6 +9,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 const EMPTY_FORM = {
   name: '', category: 'All', description: '', benefits: '', minAge: '', maxAge: 120,
   maxIncome: '', occupation: '', state: '', documents: '', applyLink: '', isActive: true,
+  applicationStart: '', applicationEnd: '',
 };
 
 const AdminPanel = () => {
@@ -43,6 +44,8 @@ const AdminPanel = () => {
       occupation: s.occupation.join(', '),
       state: s.state.join(', '),
       documents: s.documents.join('\n'),
+      applicationStart: s.applicationStart ? new Date(s.applicationStart).toISOString().split('T')[0] : '',
+      applicationEnd: s.applicationEnd ? new Date(s.applicationEnd).toISOString().split('T')[0] : '',
     });
     setShowModal(true);
   };
@@ -213,7 +216,21 @@ const AdminPanel = () => {
               <button onClick={() => setShowModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}><X size={20} /></button>
             </div>
             <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {[['name', 'Scheme Name', 'text', ''], ['description', 'Description', 'textarea', ''], ['category', 'Category', 'select', ['All', 'SC', 'ST', 'OBC', 'General', 'Women', 'Minority']], ['minAge', 'Min Age', 'number', ''], ['maxAge', 'Max Age', 'number', ''], ['maxIncome', 'Max Income (₹)', 'number', ''], ['occupation', 'Occupation (comma separated)', 'text', 'farmer, student, labour'], ['state', 'State (comma separated, use "All" for nationwide)', 'text', 'All'], ['benefits', 'Benefits (one per line)', 'textarea', ''], ['documents', 'Documents Required (one per line)', 'textarea', ''], ['applyLink', 'Apply Link (URL)', 'text', '']].map(([key, label, type, placeholder]) => (
+              {[
+                ['name', 'Scheme Name', 'text', ''], 
+                ['description', 'Description', 'textarea', ''], 
+                ['category', 'Category', 'select', ['All', 'SC', 'ST', 'OBC', 'General', 'Women', 'Minority']], 
+                ['minAge', 'Min Age', 'number', ''], 
+                ['maxAge', 'Max Age', 'number', ''], 
+                ['maxIncome', 'Max Income (₹)', 'number', ''], 
+                ['occupation', 'Occupation (comma separated)', 'text', 'farmer, student, labour'], 
+                ['state', 'State (comma separated, use "All" for nationwide)', 'text', 'All'], 
+                ['benefits', 'Benefits (one per line)', 'textarea', ''], 
+                ['documents', 'Documents Required (one per line)', 'textarea', ''], 
+                ['applyLink', 'Apply Link (URL)', 'text', ''],
+                ['applicationStart', 'Application Start Date', 'date', ''],
+                ['applicationEnd', 'Application Deadline (End Date)', 'date', '']
+              ].map(([key, label, type, placeholder]) => (
                 <div key={key}>
                   <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '4px', display: 'block' }}>{label}</label>
                   {type === 'textarea' ? (
