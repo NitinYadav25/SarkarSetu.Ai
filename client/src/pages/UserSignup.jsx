@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import API from '../api/axios';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import toast from 'react-hot-toast';
 import { Check, ShieldCheck } from 'lucide-react';
 
@@ -17,6 +18,7 @@ const UserSignup = () => {
   const [otp, setOtp] = useState('');
   
   const { userLogin } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const handleSendOtp = async (e) => {
@@ -64,25 +66,25 @@ const UserSignup = () => {
     <div style={{ minHeight: 'calc(100vh - 64px)', padding: '2rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
       <div className="glass-card fade-in-up" style={{ width: '100%', maxWidth: '700px', padding: '2.5rem' }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 800 }}>Create Your Profile</h1>
-          <p style={{ color: 'var(--text-muted)' }}>Complete your profile to automatically discover eligible government schemes.</p>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: 800 }}>{t.signupTitle}</h1>
+          <p style={{ color: 'var(--text-muted)' }}>{t.signupSub}</p>
         </div>
 
         <form onSubmit={handleSendOtp} className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
           
           {/* Account Details */}
-          <div style={{ gridColumn: 'span 2' }}><h3 style={{ fontSize: '1.1rem', fontWeight: 700, borderBottom: '2px solid #e2e8f0', paddingBottom: '0.5rem', color: '#1a56db' }}>1. Account Details</h3></div>
+          <div style={{ gridColumn: 'span 2' }}><h3 style={{ fontSize: '1.1rem', fontWeight: 700, borderBottom: '2px solid #e2e8f0', paddingBottom: '0.5rem', color: '#1a56db' }}>1. {t.navSubtitle.split(' ')[0]} Details</h3></div>
           
-          <div><label style={labelStyle}>Full Name *</label><input className={inputStyle} type="text" value={form.name} onChange={e=>setForm({...form, name: e.target.value})} required disabled={step===2}/></div>
-          <div><label style={labelStyle}>Email Address *</label><input className={inputStyle} type="email" value={form.email} onChange={e=>setForm({...form, email: e.target.value})} required disabled={step===2}/></div>
-          <div><label style={labelStyle}>Password *</label><input className={inputStyle} type="password" value={form.password} onChange={e=>setForm({...form, password: e.target.value})} required disabled={step===2}/></div>
+          <div><label style={labelStyle}>{t.fullName} *</label><input className={inputStyle} type="text" value={form.name} onChange={e=>setForm({...form, name: e.target.value})} required disabled={step===2}/></div>
+          <div><label style={labelStyle}>{t.emailLabel} *</label><input className={inputStyle} type="email" value={form.email} onChange={e=>setForm({...form, email: e.target.value})} required disabled={step===2}/></div>
+          <div><label style={labelStyle}>{t.passwordLabel} *</label><input className={inputStyle} type="password" value={form.password} onChange={e=>setForm({...form, password: e.target.value})} required disabled={step===2}/></div>
           <div><label style={labelStyle}>Aadhar Number (12 Digits) *</label><input className={inputStyle} type="text" maxLength={12} pattern="\d{12}" title="12 digit Aadhar Number" placeholder="0000 0000 0000" value={form.aadharNumber} onChange={e=>setForm({...form, aadharNumber: e.target.value.replace(/\D/g, '')})} required disabled={step===2}/></div>
 
           {/* Demographics */}
           <div style={{ gridColumn: 'span 2', marginTop: '1rem' }}><h3 style={{ fontSize: '1.1rem', fontWeight: 700, borderBottom: '2px solid #e2e8f0', paddingBottom: '0.5rem', color: '#1a56db' }}>2. Eligibility Criteria</h3></div>
           
-          <div><label style={labelStyle}>Age *</label><input className={inputStyle} type="number" min="1" max="120" value={form.age} onChange={e=>setForm({...form, age: e.target.value})} required disabled={step===2}/></div>
-          <div><label style={labelStyle}>Annual Family Income (₹) *</label><input className={inputStyle} type="number" min="0" value={form.income} onChange={e=>setForm({...form, income: e.target.value})} required disabled={step===2}/></div>
+          <div><label style={labelStyle}>{t.ageLabel} *</label><input className={inputStyle} type="number" min="1" max="120" value={form.age} onChange={e=>setForm({...form, age: e.target.value})} required disabled={step===2}/></div>
+          <div><label style={labelStyle}>{t.incomeLabel} *</label><input className={inputStyle} type="number" min="0" value={form.income} onChange={e=>setForm({...form, income: e.target.value})} required disabled={step===2}/></div>
           
           <div>
             <label style={labelStyle}>Gender *</label>
@@ -91,13 +93,13 @@ const UserSignup = () => {
             </select>
           </div>
           <div>
-            <label style={labelStyle}>Category *</label>
+            <label style={labelStyle}>{t.categoryLabel} *</label>
             <select className={inputStyle} value={form.category} onChange={e=>setForm({...form, category: e.target.value})} disabled={step===2}>
               <option value="General">General</option><option value="OBC">OBC</option><option value="SC">SC</option><option value="ST">ST</option><option value="Minority">Minority</option>
             </select>
           </div>
           <div>
-            <label style={labelStyle}>Occupation *</label>
+            <label style={labelStyle}>{t.occupationLabel} *</label>
             <select className={inputStyle} value={form.occupation} onChange={e=>setForm({...form, occupation: e.target.value})} disabled={step===2}>
               <option value="Student">Student</option>
               <option value="Farmer">Farmer / Agriculture</option>
@@ -112,7 +114,7 @@ const UserSignup = () => {
             </select>
           </div>
           <div>
-            <label style={labelStyle}>State / UT *</label>
+            <label style={labelStyle}>{t.stateLabel} *</label>
             <input className={inputStyle} type="text" placeholder="e.g., Maharashtra, Delhi" value={form.state} onChange={e=>setForm({...form, state: e.target.value})} required disabled={step===2}/>
           </div>
           <div>
@@ -129,7 +131,7 @@ const UserSignup = () => {
 
         {step === 1 && (
           <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-            Already have an account? <Link to="/login" style={{ color: '#1a56db', fontWeight: 600 }}>Login here</Link>
+            {t.haveAccount} <Link to="/login" style={{ color: '#1a56db', fontWeight: 600 }}>{t.loginBtn}</Link>
           </p>
         )}
       </div>

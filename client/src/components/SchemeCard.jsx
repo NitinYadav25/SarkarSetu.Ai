@@ -1,8 +1,10 @@
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '../context/LanguageContext';
 import { CheckCircle, ArrowRight, ExternalLink } from 'lucide-react';
 
 const SchemeCard = ({ scheme, matchPercent, aiSummary, index = 0 }) => {
   const navigate = useNavigate();
+  const { language, t } = useLanguage();
 
   const getMatchColor = (pct) => {
     if (pct >= 80) return '#10b981';
@@ -17,10 +19,10 @@ const SchemeCard = ({ scheme, matchPercent, aiSummary, index = 0 }) => {
     const diffTime = end - now;
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-    if (diffDays < 0) return { label: 'Expired', color: '#ef4444' };
-    if (diffDays === 0) return { label: 'Ends Today', color: '#f59e0b' };
-    if (diffDays <= 7) return { label: `Ends in ${diffDays}d`, color: '#f59e0b' };
-    return { label: `${end.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}`, color: '#10b981' };
+    if (diffDays < 0) return { label: language === 'hi' ? 'समाप्त' : 'Expired', color: '#ef4444' };
+    if (diffDays === 0) return { label: language === 'hi' ? 'आज समाप्त' : 'Ends Today', color: '#f59e0b' };
+    if (diffDays <= 7) return { label: language === 'hi' ? `${diffDays} दिन में समाप्त` : `Ends in ${diffDays}d`, color: '#f59e0b' };
+    return { label: `${end.toLocaleDateString(language === 'hi' ? 'hi-IN' : 'en-IN', { day: 'numeric', month: 'short' })}`, color: '#10b981' };
   };
 
   const deadline = getDeadlineStatus(scheme.applicationEnd);
@@ -45,7 +47,7 @@ const SchemeCard = ({ scheme, matchPercent, aiSummary, index = 0 }) => {
               color: '#1a56db', textTransform: 'uppercase', background: 'var(--primary-light)',
               padding: '2px 8px', borderRadius: '4px',
             }}>
-              {scheme.category}
+              {scheme.category} {language === 'hi' ? 'श्रेणी' : 'Category'}
             </span>
             {deadline && (
               <span style={{
@@ -72,7 +74,7 @@ const SchemeCard = ({ scheme, matchPercent, aiSummary, index = 0 }) => {
           <div style={{ fontSize: '1.1rem', fontWeight: 800, color: getMatchColor(matchPercent), lineHeight: 1 }}>
             {matchPercent}%
           </div>
-          <div style={{ fontSize: '0.6rem', color: getMatchColor(matchPercent), fontWeight: 600 }}>Match</div>
+          <div style={{ fontSize: '0.6rem', color: getMatchColor(matchPercent), fontWeight: 600 }}>{language === 'hi' ? 'मैच' : 'Match'}</div>
         </div>
       </div>
 
@@ -95,7 +97,7 @@ const SchemeCard = ({ scheme, matchPercent, aiSummary, index = 0 }) => {
         ))}
         {scheme.benefits.length > 2 && (
           <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', padding: '3px 0' }}>
-            +{scheme.benefits.length - 2} more
+            +{scheme.benefits.length - 2} {language === 'hi' ? 'और' : 'more'}
           </span>
         )}
       </div>
@@ -107,7 +109,7 @@ const SchemeCard = ({ scheme, matchPercent, aiSummary, index = 0 }) => {
           style={{ flex: 1, fontSize: '0.875rem', padding: '0.6rem 1rem', justifyContent: 'center' }}
           onClick={() => navigate(`/scheme/${scheme._id}`)}
         >
-          View Details <ArrowRight size={15} />
+          {t.viewDetails} <ArrowRight size={15} />
         </button>
         <a
           href={scheme.applyLink || 'https://india.gov.in'}
@@ -116,7 +118,7 @@ const SchemeCard = ({ scheme, matchPercent, aiSummary, index = 0 }) => {
           className="btn-secondary"
           style={{ fontSize: '0.875rem', padding: '0.6rem 1rem' }}
         >
-          Apply <ExternalLink size={13} />
+          {language === 'hi' ? 'आवेदन' : 'Apply'} <ExternalLink size={13} />
         </a>
       </div>
     </div>

@@ -7,7 +7,7 @@ import { ArrowRight, Search, CheckCircle, Star, Users, FileCheck } from 'lucide-
 const LandingPage = () => {
   const navigate = useNavigate();
   const { isUserAuthenticated } = useAuth();
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const [currentImage, setCurrentImage] = useState(0);
 
   const bgImages = [
@@ -74,9 +74,9 @@ const LandingPage = () => {
         <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 2 }}>
 
           <h1 className="fade-in-up" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 900, color: 'white', lineHeight: 1.15, marginBottom: '1.25rem', animationDelay: '0.1s' }}>
-            Apka Hak,{' '}
+            {language === 'hi' ? 'आपका हक, ' : 'Apka Hak, '}
             <span style={{ color: '#fbbf24', position: 'relative' }}>
-              Seedha Aapke Paas
+              {language === 'hi' ? 'सीधा आपके पास' : 'Seedha Aapke Paas'}
             </span>
           </h1>
 

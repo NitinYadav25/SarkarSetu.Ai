@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import API from '../api/axios';
 import toast from 'react-hot-toast';
 import { User, Mail, ShieldCheck, Edit3, Save } from 'lucide-react';
 
 const UserProfile = () => {
   const { user, userLogin } = useAuth();
+  const { language, t } = useLanguage();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
@@ -41,13 +43,13 @@ const UserProfile = () => {
         headers: { Authorization: `Bearer ${localStorage.getItem('sarkarsetuUserToken')}` }
       });
       if (res.data.success) {
-        toast.success('Profile updated successfully!');
+        toast.success(language === 'hi' ? 'प्रोफ़ाइल सफलतापूर्वक अपडेट हो गई!' : 'Profile updated successfully!');
         // Update global context so Navbar and Dashboard reflect new info
         userLogin(res.data.user, localStorage.getItem('sarkarsetuUserToken'));
         setIsEditing(false);
       }
     } catch (err) {
-      toast.error('Failed to update profile');
+      toast.error(language === 'hi' ? 'प्रोफ़ाइल अपडेट करने में विफल' : 'Failed to update profile');
     } finally {
       setLoading(false);
     }
@@ -60,7 +62,7 @@ const UserProfile = () => {
     return (
       <div style={{ minHeight: 'calc(100vh - 64px)', padding: '5rem 0', textAlign: 'center' }}>
         <div className="spinner" style={{ width: 40, height: 40, borderWidth: 3, margin: '0 auto' }} />
-        <p style={{ marginTop: '1rem', color: 'var(--text-muted)' }}>Loading your profile...</p>
+        <p style={{ marginTop: '1rem', color: 'var(--text-muted)' }}>{language === 'hi' ? 'आपकी प्रोफ़ाइल लोड की जा रही है...' : 'Loading your profile...'}</p>
       </div>
     );
   }
@@ -73,9 +75,9 @@ const UserProfile = () => {
         <div className="responsive-flex" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', borderBottom: '1px solid #e5e7eb', paddingBottom: '1.5rem' }}>
           <div>
             <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f2460', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <User size={28} color="#1a56db" /> My Profile
+              <User size={28} color="#1a56db" /> {language === 'hi' ? 'मेरी प्रोफ़ाइल' : 'My Profile'}
             </h1>
-            <p style={{ color: 'var(--text-muted)', marginTop: '0.25rem' }}>View or update your demographic details.</p>
+            <p style={{ color: 'var(--text-muted)', marginTop: '0.25rem' }}>{language === 'hi' ? 'अपने जनसांख्यिकीय विवरण देखें या अपडेट करें।' : 'View or update your demographic details.'}</p>
           </div>
           
           <button 
@@ -83,7 +85,7 @@ const UserProfile = () => {
             className={isEditing ? 'btn-secondary' : 'btn-primary'}
             style={{ padding: '0.6rem 1.25rem' }}
           >
-            {isEditing ? 'Cancel Edit' : <><Edit3 size={16} /> Edit Profile</>}
+            {isEditing ? (language === 'hi' ? 'संपादन रद्द करें' : 'Cancel Edit') : <><Edit3 size={16} /> {language === 'hi' ? 'प्रोफ़ाइल संपादित करें' : 'Edit Profile'}</>}
           </button>
         </div>
 
@@ -92,11 +94,11 @@ const UserProfile = () => {
           {/* Identity Section (Read Only) */}
           <div style={{ gridColumn: '1 / -1', background: 'rgba(26,86,219,0.04)', padding: '1.5rem', borderRadius: '12px', border: '1px solid rgba(26,86,219,0.1)' }}>
             <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#1a56db', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <ShieldCheck size={18} /> Verified Identity <span style={{fontSize: '0.75rem', fontWeight: 500, background: '#e0f2fe', padding: '2px 8px', borderRadius: '50px'}}>(Cannot be changed)</span>
+              <ShieldCheck size={18} /> {language === 'hi' ? 'सत्यापित पहचान' : 'Verified Identity'} <span style={{fontSize: '0.75rem', fontWeight: 500, background: '#e0f2fe', padding: '2px 8px', borderRadius: '50px'}}>{language === 'hi' ? '(बदला नहीं जा सकता)' : '(Cannot be changed)'}</span>
             </h3>
             <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
               <div>
-                <label style={labelStyle}>Email Address</label>
+                <label style={labelStyle}>{t.emailLabel}</label>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '0.8rem 1rem', background: '#f3f4f6', borderRadius: '8px', color: '#6b7280', fontSize: '0.9rem', fontWeight: 500 }}>
                   <Mail size={16} /> {form.email}
                 </div>
@@ -112,19 +114,19 @@ const UserProfile = () => {
 
           {/* Editable Demographics */}
           <div>
-            <label style={labelStyle}>Full Name</label>
+            <label style={labelStyle}>{t.fullName}</label>
             <input className={inputStyle} type="text" value={form.name} onChange={e=>setForm({...form, name: e.target.value})} disabled={!isEditing} required />
           </div>
           <div>
-            <label style={labelStyle}>Age</label>
+            <label style={labelStyle}>{t.ageLabel}</label>
             <input className={inputStyle} type="number" min="1" max="120" value={form.age} onChange={e=>setForm({...form, age: e.target.value})} disabled={!isEditing} required />
           </div>
           <div>
-            <label style={labelStyle}>Annual Family Income (₹)</label>
+            <label style={labelStyle}>{t.incomeLabel}</label>
             <input className={inputStyle} type="number" min="0" value={form.income} onChange={e=>setForm({...form, income: e.target.value})} disabled={!isEditing} required />
           </div>
           <div>
-            <label style={labelStyle}>Occupation</label>
+            <label style={labelStyle}>{t.occupationLabel}</label>
             <select className={inputStyle} value={form.occupation} onChange={e=>setForm({...form, occupation: e.target.value})} disabled={!isEditing}>
               <option value="Student">Student</option>
               <option value="Farmer">Farmer / Agriculture</option>
@@ -139,7 +141,7 @@ const UserProfile = () => {
             </select>
           </div>
           <div>
-            <label style={labelStyle}>State / UT</label>
+            <label style={labelStyle}>{t.stateLabel}</label>
             <input className={inputStyle} type="text" value={form.state} onChange={e=>setForm({...form, state: e.target.value})} disabled={!isEditing} required />
           </div>
           
@@ -150,7 +152,7 @@ const UserProfile = () => {
             </select>
           </div>
           <div>
-            <label style={labelStyle}>Category</label>
+            <label style={labelStyle}>{t.categoryLabel}</label>
             <select className={inputStyle} value={form.category} onChange={e=>setForm({...form, category: e.target.value})} disabled={!isEditing}>
               <option value="General">General</option><option value="OBC">OBC</option><option value="SC">SC</option><option value="ST">ST</option><option value="Minority">Minority</option>
             </select>
@@ -166,7 +168,7 @@ const UserProfile = () => {
           {isEditing && (
             <div style={{ gridColumn: '1 / -1', marginTop: '1rem', borderTop: '1px solid #e5e7eb', paddingTop: '1.5rem', display: 'flex', justifyContent: 'flex-end' }}>
               <button className="btn-primary" type="submit" disabled={loading} style={{ padding: '0.8rem 2rem' }}>
-                {loading ? <div className="spinner" style={{ width: 20, height: 20, borderWidth: 2 }} /> : <><Save size={18} /> Save Changes</>}
+                {loading ? <div className="spinner" style={{ width: 20, height: 20, borderWidth: 2 }} /> : <><Save size={18} /> {language === 'hi' ? 'बदलाव सुरक्षित करें' : 'Save Changes'}</>}
               </button>
             </div>
           )}

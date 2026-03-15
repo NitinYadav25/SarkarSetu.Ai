@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 
 const LanguageContext = createContext();
 
@@ -44,6 +44,31 @@ const translations = {
     // Footer
     footerText: "SarkarSetu AI — Every Citizen's Right",
     adminAccess: 'Admin Access',
+
+    // Auth Pages
+    userLoginTitle: 'User Login',
+    userLoginSub: 'Login to view your eligible schemes',
+    emailLabel: 'Email',
+    passwordLabel: 'Password',
+    loginBtn: 'Login',
+    noAccount: "Don't have an account?",
+    createProfile: 'Create Profile',
+    signupTitle: 'Create Your Profile',
+    signupSub: 'Tell us a bit about yourself to find matching schemes',
+    fullName: 'Full Name',
+    ageLabel: 'Age',
+    incomeLabel: 'Annual Income (₹)',
+    stateLabel: 'State',
+    categoryLabel: 'Category',
+    occupationLabel: 'Occupation',
+    signupBtn: 'Generate My Profile',
+    haveAccount: 'Already have a profile?',
+
+    // Dashboard
+    matchingSchemes: 'Matching Schemes',
+    noSchemes: 'No schemes found matching your profile.',
+    matchScore: 'Match Score',
+    viewDetails: 'View Details',
 
     // Chatbot
     botGreeting: 'Hello! 🙏 I am SarkarSetu AI. You can ask me about any government scheme.',
@@ -94,6 +119,31 @@ const translations = {
     footerText: 'SarkarSetu AI — हर नागरिक का अधिकार',
     adminAccess: 'एडमिन एक्सेस',
 
+    // Auth Pages
+    userLoginTitle: 'यूजर लॉगिन',
+    userLoginSub: 'अपनी योग्य योजनाएं देखने के लिए लॉगिन करें',
+    emailLabel: 'ईमेल',
+    passwordLabel: 'पासवर्ड',
+    loginBtn: 'लॉगिन',
+    noAccount: "अकाउंट नहीं है?",
+    createProfile: 'प्रोफ़ाइल बनाएं',
+    signupTitle: 'अपनी प्रोफ़ाइल बनाएं',
+    signupSub: 'मिलान वाली योजनाएं खोजने के लिए हमें अपने बारे में बताएं',
+    fullName: 'पूरा नाम',
+    ageLabel: 'उम्र',
+    incomeLabel: 'वार्षिक आय (₹)',
+    stateLabel: 'राज्य',
+    categoryLabel: 'श्रेणी',
+    occupationLabel: 'व्यवसाय',
+    signupBtn: 'मेरी प्रोफ़ाइल बनाएं',
+    haveAccount: 'पहले से प्रोफ़ाइल है?',
+
+    // Dashboard
+    matchingSchemes: 'मिलने वाली योजनाएं',
+    noSchemes: 'आपकी प्रोफ़ाइल से मेल खाने वाली कोई योजना नहीं मिली।',
+    matchScore: 'मैच स्कोर',
+    viewDetails: 'विवरण देखें',
+
     // Chatbot
     botGreeting: 'नमस्ते! 🙏 मैं SarkarSetu AI हूँ। आप किसी भी सरकारी योजना के बारे में पूछ सकते हैं।',
     botPlaceholder: 'किसी भी योजना के बारे में पूछें...',
@@ -104,7 +154,11 @@ const translations = {
 };
 
 export const LanguageProvider = ({ children }) => {
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState(localStorage.getItem('sarkarsetu_lang') || 'en');
+
+  useEffect(() => {
+    localStorage.setItem('sarkarsetu_lang', language);
+  }, [language]);
 
   const toggleLanguage = () => {
     setLanguage((prev) => (prev === 'en' ? 'hi' : 'en'));
@@ -120,3 +174,4 @@ export const LanguageProvider = ({ children }) => {
 };
 
 export const useLanguage = () => useContext(LanguageContext);
+
